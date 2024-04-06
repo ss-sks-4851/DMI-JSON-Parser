@@ -20,7 +20,7 @@ const uri = `mongodb+srv://${username}:${password}@cluster0.zlh8xzd.mongodb.net/
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
-const storage = multer.memoryStorage(); // Store files in memory, you can change it as per your requirement
+const storage = multer.memoryStorage(); // Store files in memory
 const upload = multer({ storage: storage });
 function customJSONParse(jsonString) {
     let index = 0;
@@ -151,7 +151,7 @@ async function connectToDatabase(dataToInsert) {
         const database = client.db('json-parser');
         const collection = database.collection('json-parse');
 
-        // Example: Insert data into the collection
+        //Insert data into the collection
         const result = await collection.insertOne(dataToInsert);
         console.log("result: "+result);
         console.log(`Inserted document into the collection`);
@@ -162,37 +162,6 @@ async function connectToDatabase(dataToInsert) {
         await client.close();
     }
 }
-
-// async function fetchDataFromDatabase() {
-//     try {
-//         // Connect to the MongoDB server
-//         await client.connect();
-//         console.log('Connected to MongoDB Atlas');
-
-//         // Use the database
-//         const database = client.db('json-parser');
-//         const collection = database.collection('json-parse');
-
-//         // Fetch data from the collection
-//         const cursor = collection.find({});
-
-//         // Iterate over the cursor and log the documents
-//         await cursor.forEach(document => {
-//             console.log(document);
-//         });
-//     } catch (error) {
-//         console.error('Error fetching data from MongoDB Atlas:', error);
-//     } finally {
-//         // Close the connection
-//         await client.close();
-//     }
-// }
-
-
-// app.get("/",(req,res)=>{
-//     console.log("server called!");
-//     res.status(200).send("server called!");
-// });
 
 app.post('/parse', upload.single('file'),async  (req, res) => {
     console.log("JSON parser called!");
@@ -214,9 +183,10 @@ app.post('/parse', upload.single('file'),async  (req, res) => {
     
     try {
         const parsedJSON = await customJSONParse(processedJsonString);
-        console.log(typeof parsedJSON);
+        //console.log(typeof parsedJSON);
         connectToDatabase(parsedJSON);
-        //res.status(200).json({parsedJson:parsedJSON});
+        if(!parsedJSON) throw new Error('Invalid JSON string');
+        res.status(200).json({parsedJson:parsedJSON});
     } catch (error) {
         console.log(error.message);
         res.status(400).json({ error: 'Invalid JSON string' });

@@ -1,0 +1,38 @@
+<!-- <button (click)="gotoparse()">go to parser</button> -->
+<div>
+    <div class="card-body">
+        <nav class="navbar navbar-light bg-light">
+            <a class="navbar-brand d-inline-block" href="#">
+                <img src="../assets/images/logo1.png" width="50" height="50" class="d-inline-block align-top" alt="">
+                <h1 style="color: #15a0b0;">DMI Finance Parser for Json </h1>
+            </a>
+    </nav>
+
+    </div>
+    <div>
+        <button  class="btn btn-primary"(click)="browseFileInput.click()">Browse</button>
+        <input #browseFileInput type="file" accept="*" (change)="onFileUpload($event)" class="d-none"/>
+        <p>Selected File : {{fileName}}</p>
+    </div>
+    <div *ngIf="showFilesDetails">
+        <h2 style="color: green;">JSON Response</h2>
+        <div  style="overflow-y: scroll; background-color:#d1e3df ">
+            <p>{{parsedData |json}}</p>
+        </div>
+        <!-- <ul>
+          <li *ngFor="let key of parsedData?.keys">
+            <strong>{{ key }}:</strong> {{ parsedData[key] }}
+          </li>
+        </ul> -->
+    </div>
+
+    <div *ngIf="percentage>0" class="mt-2">
+        <!-- <div>Progress </div> -->
+        <!-- <progress [value]=progress.loaded  [max]=progress.total class="progressbar" data-upload=percentage>
+        </progress></div> --> 
+        <div class="progress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+        [style.width.%]=percentage [attr.aria-valuenow]="progress.loaded" aria-valuemin="0"
+        [attr.aria-valuemax]="progress.total"><span style="font-size: small;">{{percentage}}%</span></div></div></div>
+</div>
+
